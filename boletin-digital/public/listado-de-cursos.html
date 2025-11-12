@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Listado de Cursos - 7º</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header-wrap header-brand">
+    <div class="header-brand">
+      <img src="logo.png" alt="Logo Colegio">
+      <h1>Colegio Provincial Dr. Ernesto Guevara</h1>
+    </div>
+    <img class="header-logo" src="Outer.png" alt="Outer Technologies" />
+  </header>
+
+  <nav class="nav-inner">
+    <a href="index.html">Inicio</a>
+    <a href="boletin.html">Boletín</a>
+    <a href="alumnado.html">Departamento de Alumnado</a>
+    <a href="login.html" id="link-login">Iniciar Sesión</a>
+  </nav>
+
+  <main>
+    <h2>Cursos de 7º</h2>
+    <div class="table-wrapper">
+      <table id="tablaCursos">
+        <thead>
+          <tr><th>Código</th><th>Nombre</th><th>Turno</th><th>Profesor</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-left">
+      <div>
+        <strong>Outer Technologies</strong>
+        <div>Outertech@Gmail.com</div>
+        <div>+54 9 2964 69 30-33</div>
+      </div>
+    </div>
+    <div class="footer-right">
+      <div>
+        <strong>Colegio Dr.Ernesto Guevara</strong>
+        <div>Río Candelaria 3462</div>
+        <div>02964 30-0532</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/script.js" nonce="{{CSP_NONCE}}"></script>
+
+  <script>
+    async function cargarCursos() {
+      try {
+        const res = await fetch('/api/alumnado/cursos', { credentials: 'include' });
+        const data = await res.json();
+        const tbody = document.querySelector('#tablaCursos tbody');
+        tbody.innerHTML = '';
+        if (data.ok && data.cursos) {
+          data.cursos.forEach(c => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${c.codigo}</td><td>${c.nombre}</td><td>${c.turno}</td><td>${c.profesor}</td>`;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="4">No autorizado o no hay cursos</td></tr>';
+        }
+      } catch (err) {
+        console.error(err);
+        document.querySelector('#tablaCursos tbody').innerHTML = '<tr><td colspan="4">Error al cargar</td></tr>';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', cargarCursos);
+  </script>
+</body>
+</html>
